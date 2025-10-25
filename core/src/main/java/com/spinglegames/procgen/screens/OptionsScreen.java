@@ -10,12 +10,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 
-
-public class MainMenu extends ProcgenScreen {
+public class OptionsScreen extends ProcgenScreen {
     private Skin skin;
     private Stage stage;
 
-    public MainMenu(Game game) {
+    public OptionsScreen(Game game) {
         super(game);
     }
 
@@ -26,32 +25,40 @@ public class MainMenu extends ProcgenScreen {
 
         Table root = new Table(); root.setFillParent(true);
         stage.addActor(root);
-        root.setDebug(true);
-        root.defaults().padTop(20f);
 
-        Window window = new Window("Main Menu", skin, "border");
-        window.debug();
+        root.setDebug(true);
+
+        Window window = new Window("Options", skin, "border");
         window.setMovable(false);
         window.pad(16f);
-        window.defaults().pad(10f).width(260).height(48);
+        window.defaults().pad(8f).width(130).height(24);
 
-        TextButton play    = new TextButton("Play", skin);
-        TextButton options = new TextButton("Options", skin);
-        TextButton exit    = new TextButton("Exit", skin);
 
-        window.add(play).row();
-        window.add(options).row();
-        window.add(exit).row();
+        String[] displayOpts = {"Windowed","Fullscreen"};
+
+        Table selectSection = new Table();
+
+        Label displayLbl = new Label("Display:",skin);
+        SelectBox<String> displaySlct = new SelectBox<>(skin);
+        displaySlct.setItems(displayOpts);
+
+
+        TextButton apply = new TextButton("Apply", skin);
+        TextButton back = new TextButton("Back", skin);
+
+
+        window.add(displayLbl);
+        window.add(displaySlct);
         window.row();
-        window.add(new Label("v0.1.0", skin)).expandX().right().padTop(4f);
-
+        window.add(back);
+        window.add(apply);
 
         window.pack();
         root.add(window).center();
 
-        play.addListener(click(() -> game.setScreen(new GameScreen(game))));
-        options.addListener(click(() -> game.setScreen(new OptionsScreen(game))));
-        exit.addListener(click(Gdx.app::exit));
+
+        apply.addListener(click(() -> System.out.println("Settings applied")));
+        back.addListener(click(() -> game.setScreen(new MainMenu(game))));
 
         Gdx.input.setInputProcessor(stage);
 
@@ -74,8 +81,8 @@ public class MainMenu extends ProcgenScreen {
         dispose();
     }
 
-    @Override public void resize(int w, int h) {
-        stage.getViewport().update(w, h, true);
+    @Override public void resize(int width, int height) {
+        stage.getViewport().update(width, height, true);
     }
 
     private static InputListener click(Runnable r) {

@@ -24,10 +24,10 @@ public class MainMenu extends ProcgenScreen {
         stage = new Stage(new FitViewport(1920, 1080));
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
-        Table root = new Table(); root.setFillParent(true);
+        Table root = new Table();
+        root.setFillParent(true);
         stage.addActor(root);
         root.setDebug(true);
-        root.defaults().padTop(20f);
 
         Window window = new Window("Main Menu", skin, "border");
         window.debug();

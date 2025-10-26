@@ -4,8 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -136,10 +134,4 @@ public class OptionsScreen extends ProcgenScreen {
         stage.getViewport().update(width, height, true);
     }
 
-    private static InputListener click(Runnable r) {
-        return new InputListener() {
-            @Override public boolean touchDown(InputEvent e, float x, float y, int p, int b) { return true; }
-            @Override public void touchUp(InputEvent e, float x, float y, int p, int b) { r.run(); }
-        };
-    }
 }

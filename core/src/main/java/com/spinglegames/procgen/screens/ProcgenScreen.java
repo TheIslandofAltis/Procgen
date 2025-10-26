@@ -2,6 +2,8 @@ package com.spinglegames.procgen.screens;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 
 public class ProcgenScreen implements Screen {
     Game game;
@@ -43,5 +45,12 @@ public class ProcgenScreen implements Screen {
     @Override
     public void dispose() {
 
+    }
+
+    public static InputListener click(Runnable r) {
+        return new InputListener() {
+            @Override public boolean touchDown(InputEvent e, float x, float y, int p, int b) { return true; }
+            @Override public void touchUp(InputEvent e, float x, float y, int p, int b) { r.run(); }
+        };
     }
 }

@@ -49,7 +49,7 @@ public class OptionsScreen extends ProcgenScreen {
         Table root = new Table(); root.setFillParent(true);
         stage.addActor(root);
 
-        root.setDebug(true);
+//        root.setDebug(true);
 
         Window window = new Window("Options", skin, "border");
         window.setMovable(false);

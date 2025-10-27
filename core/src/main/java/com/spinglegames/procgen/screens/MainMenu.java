@@ -25,10 +25,10 @@ public class MainMenu extends ProcgenScreen {
         Table root = new Table();
         root.setFillParent(true);
         stage.addActor(root);
-        root.setDebug(true);
+//        root.setDebug(true);
 
         Window window = new Window("Main Menu", skin, "border");
-        window.debug();
+//        window.debug();
         window.setMovable(false);
         window.pad(16f);
         window.defaults().pad(10f).width(260).height(48);

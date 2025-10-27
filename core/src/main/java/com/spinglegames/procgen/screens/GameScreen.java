@@ -4,22 +4,13 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Pixmap;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.maps.MapLayers;
-import com.badlogic.gdx.maps.objects.PolygonMapObject;
-import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
-import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
-import com.badlogic.gdx.math.Polygon;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.spinglegames.procgen.map.HexMap;
 
 public class GameScreen extends ProcgenScreen {
 
@@ -28,6 +19,8 @@ public class GameScreen extends ProcgenScreen {
     private Window pauseMenu;
     private Boolean paused = false;
 
+    private HexMap hexMap;
+
     public GameScreen (Game game) {
         super(game);
     }
@@ -35,6 +28,10 @@ public class GameScreen extends ProcgenScreen {
 
     @Override
     public void show() {
+
+        hexMap = new HexMap();
+        hexMap.create();
+
         stage = new Stage(new FitViewport(1920, 1080));
         skin = new Skin(Gdx.files.internal("ui/uiskin.json"));
 
@@ -50,43 +47,10 @@ public class GameScreen extends ProcgenScreen {
 
     }
 
-    public void createMap() {
-
-        Pixmap pixmap = new Pixmap(10, 10, Pixmap.Format.RGBA8888);
-        pixmap.setColor(Color.RED);
-        pixmap.fillCircle(9,9,5);
-
-
-        Texture solid = new Texture(pixmap);
-        TextureRegion region = new TextureRegion(solid);
-
-
-
-
-        TiledMap map = new TiledMap();
-        MapLayers layers = map.getLayers();
-
-        TiledMapTileLayer layer1 = new TiledMapTileLayer(400, 400, 50,50);
-        Cell cell = new Cell();
-
-        cell.setTile(new StaticTiledMapTile(region));
-
-
-
-
-
-
-
-
-        Polygon hexagon = new Polygon(new float[] {1f,2f,3f,4f,5f,6f});
-
-        PolygonMapObject tile = new PolygonMapObject(hexagon);
-    }
-
     public Window createPauseMenu() {
 
         Window window = new Window("Pause Menu", skin, "border");
-        window.debug();
+//        window.debug();
         window.setMovable(false);
         window.pad(16f);
         window.defaults().pad(10f).width(260).height(48);
@@ -116,10 +80,13 @@ public class GameScreen extends ProcgenScreen {
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             paused = !paused;
             pauseMenu.setVisible(paused);
+            if (paused) pauseMenu.toFront();
         }
 
-
         ScreenUtils.clear(Color.GRAY);
+
+        hexMap.render();
+
         stage.act(delta);
         stage.draw();
     }

@@ -18,7 +18,6 @@ public class GameScreen extends ProcgenScreen {
     private Stage stage;
     private Window pauseMenu;
     private Boolean paused = false;
-
     private HexMap hexMap;
 
     public GameScreen (Game game) {
@@ -29,7 +28,7 @@ public class GameScreen extends ProcgenScreen {
     @Override
     public void show() {
 
-        hexMap = new HexMap();
+        hexMap = new HexMap(21);
         hexMap.create();
 
         stage = new Stage(new FitViewport(1920, 1080));

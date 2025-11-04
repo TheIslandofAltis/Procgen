@@ -23,7 +23,6 @@ import com.badlogic.gdx.maps.tiled.tiles.StaticTiledMapTile;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.spinglegames.procgen.util.HexExporter;
 
-import java.util.Random;
 
 public class HexMap extends InputAdapter implements ApplicationListener {
 
@@ -33,11 +32,17 @@ public class HexMap extends InputAdapter implements ApplicationListener {
     private BitmapFont font;
     private SpriteBatch batch;
 
+    private final int SEED;
+
     private static final int TILE_W = 220;     // pixel width of hex bounding box
     private static final int TILE_H = 254;     // pixel height of hex bounding box
-    private static final int HEX_SIDE = 110;   // pixel length of a hex side
-    private static final int COLS = 240;       // map width in tiles
-    private static final int ROWS = 160;       // map height in tiles
+    private static final int HEX_SIDE = 123;   // pixel length of a hex side
+    private static final int COLS = 120;       // map width in tiles
+    private static final int ROWS = 80;       // map height in tiles
+
+    public HexMap(int seed){
+        this.SEED = seed;
+    }
 
     @Override
     public void create () {
@@ -60,6 +65,8 @@ public class HexMap extends InputAdapter implements ApplicationListener {
         font = new BitmapFont();
         batch = new SpriteBatch();
 
+        HexMapGenerator generator = new HexMapGenerator(ROWS, COLS);
+
 
         map = new TiledMap();
         MapProperties p = map.getProperties();
@@ -73,31 +80,33 @@ public class HexMap extends InputAdapter implements ApplicationListener {
         p.put("height", ROWS);
 
         TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("textures/textures.atlas"));
-        StaticTiledMapTile WATER = new StaticTiledMapTile(atlas.findRegion("water"));
-        StaticTiledMapTile GRASS = new StaticTiledMapTile(atlas.findRegion("grass"));
-        StaticTiledMapTile DIRT  = new StaticTiledMapTile(atlas.findRegion("hextile"));
-
         StaticTiledMapTile BIGWATER = new StaticTiledMapTile(atlas.findRegion("bigwater"));
         StaticTiledMapTile BIGGRASS = new StaticTiledMapTile(atlas.findRegion("biggrass"));
         StaticTiledMapTile BIGDIRT = new StaticTiledMapTile(atlas.findRegion("bigdirt"));
-
-        StaticTiledMapTile[] textures = {BIGWATER,BIGGRASS};
-
-        Random rnd = new Random();
 
         TiledMapTileLayer layer = new TiledMapTileLayer(COLS, ROWS, TILE_W, TILE_H);
         MapLayers layers = map.getLayers();
 
 
-        for (int x = 0; x < COLS+1; x++) {
-            for (int y = 0; y < ROWS+1; y++) {
+        for (int x = 0; x < COLS; x++) {
+            for (int y = 0; y < ROWS; y++) {
                 Cell cell = new Cell();
 
-                if (y==0 & x==0) {
-                    cell.setTile(BIGDIRT);
+                generator.generate();
+
+                float value = generator.getValue(x,y);
+
+                if ( value < 1f) {
+                    // water
+                    cell.setTile(BIGWATER);
+                } else if (value > 2f) {
+                    // grass
+                    cell.setTile(BIGGRASS);
                 } else {
-                    cell.setTile(textures[rnd.nextInt(textures.length)]);
+                    // dirt/rock
+                    cell.setTile(BIGDIRT);
                 }
+
                 layer.setCell(x, y, cell);
             }
         }
